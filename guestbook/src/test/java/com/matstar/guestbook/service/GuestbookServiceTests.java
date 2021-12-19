@@ -15,6 +15,8 @@ public class GuestbookServiceTests {
     @Autowired
     private GuestbookService service;
 
+
+    //DTO -> Entity
     @Test
     public void testRegister() {
 
@@ -29,8 +31,10 @@ public class GuestbookServiceTests {
     @Test
     public void testList() {
 
+        //PageRequestDTO 객체 생성
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
 
+        //pageRequestDTO를 PageResultDTO로 변환
         PageResultDTO<GuestbookDTO, Guestbook> resultDTO = service.getList(pageRequestDTO);
 
         System.out.println("PREV" + resultDTO.isPrev());

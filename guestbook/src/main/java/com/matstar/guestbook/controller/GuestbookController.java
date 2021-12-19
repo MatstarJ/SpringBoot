@@ -13,7 +13,7 @@ public class GuestbookController {
     @GetMapping({"/","/list"})
     public String list() {
 
-        log.info("list..........");
+        log.info("Controller : list..........");
 
         return "/guestbook/list";
 

@@ -6,11 +6,11 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
+@ToString
+@Builder // 빌더를 사용하기 위해서 아래 두 어노테이션을 사용해야 한다.
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class Guestbook extends BaseEntity {
+public class Guestbook extends BaseEntity { // 객체의 수정/변경시간을 처리하는 BaseEntity 추상 클래스를 상속
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,8 @@ public class Guestbook extends BaseEntity {
     @Column(length = 50, nullable = false)
     private String writer;
 
+
+    // 컬럼을 수정하기 위한 메서드
     public void changeTitle(String title) {
         this.title = title;
     }

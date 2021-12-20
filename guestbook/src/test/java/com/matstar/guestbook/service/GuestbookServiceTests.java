@@ -37,17 +37,18 @@ public class GuestbookServiceTests {
         //pageRequestDTO를 PageResultDTO로 변환
         PageResultDTO<GuestbookDTO, Guestbook> resultDTO = service.getList(pageRequestDTO);
 
-        System.out.println("PREV" + resultDTO.isPrev());
-        System.out.println("NEXT" + resultDTO.isNext());
-        System.out.println("TOTAL" + resultDTO.getTotalPage());
+        //페이지 확인
+        System.out.println("PREV : " + resultDTO.isPrev());
+        System.out.println("NEXT : " + resultDTO.isNext());
+        System.out.println("TOTAL : " + resultDTO.getTotalPage());
 
-        System.out.println("--------------------------------------");
+        System.out.println("---------------DTO 리스트 -----------------------");
 
         for(GuestbookDTO guestbookDTO : resultDTO.getDtoList()) {
             System.out.println(guestbookDTO);
         }
 
-        System.out.println("---------------------------------------");
+        System.out.println("----------------페이지 리스트-----------------------");
         resultDTO.getPageList().forEach(i -> System.out.println(i));
     }
 

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -50,6 +51,14 @@ public class GuestbookServiceImpl implements GuestbookService{
         Function<Guestbook,GuestbookDTO> fn = (entity -> entityToDto(entity));
         //이것을 PageResultDTO로 변환시킨다. (생성자를 리턴하도록 처리)
         return new PageResultDTO<>(result,fn);
+    }
+
+
+    //조회처리
+    @Override
+    public GuestbookDTO read(Long gno) {
+        Optional<Guestbook> result = repository.findById(gno);
+        return result.isPresent() ? entityToDto(result.get()) : null;
     }
 
 }

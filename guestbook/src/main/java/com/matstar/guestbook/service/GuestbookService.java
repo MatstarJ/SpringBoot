@@ -13,6 +13,12 @@ public interface GuestbookService {
     PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO requestDTO);
 
 
+
+    //조회처리
+    GuestbookDTO read(Long gno);
+
+
+
     // DTO(GuestbookDTO)를 Entity 객체(Guestbook)로 변경한다.
     // default 메서드 사용하여 구현 클래스에서 사용하도록 처리한다.
     default Guestbook dtoToEntity(GuestbookDTO dto) {
@@ -40,4 +46,5 @@ public interface GuestbookService {
 
         return dto;
     }
+
 }

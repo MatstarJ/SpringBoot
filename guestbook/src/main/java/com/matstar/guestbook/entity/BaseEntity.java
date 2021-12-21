@@ -27,5 +27,5 @@ abstract class BaseEntity {
 
     @LastModifiedDate //JPA에서 객체의 최종 수정 시간을 자동으로 처리한다.
     @Column(name="moddate")
-    private LocalDateTime moDate;
+    private LocalDateTime modDate;
 }

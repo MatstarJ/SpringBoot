@@ -61,4 +61,33 @@ public class GuestbookServiceImpl implements GuestbookService{
         return result.isPresent() ? entityToDto(result.get()) : null;
     }
 
+    //삭제처리
+    @Override
+    public void remove(Long gno) {
+
+        repository.deleteById(gno);
+
+    }
+    //수정
+    @Override
+    public void modify(GuestbookDTO dto) {
+
+
+        Optional<Guestbook> result = repository.findById(dto.getGno());
+
+        if(result.isPresent()) {
+
+            //select된 entity를 가져옴
+            Guestbook entity = result.get();
+
+            //dto에 있는 걸 entity로 넣어서 수정
+            entity.changeTitle(dto.getTitle());
+            entity.changeContent(dto.getContent());
+
+            repository.save(entity);
+        }
+    }
+
+
+
 }

@@ -2,7 +2,6 @@ package com.matstar.guestbook.controller;
 
 import com.matstar.guestbook.dto.GuestbookDTO;
 import com.matstar.guestbook.dto.PageRequestDTO;
-import com.matstar.guestbook.entity.Guestbook;
 import com.matstar.guestbook.service.GuestbookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -58,8 +57,8 @@ public class GuestbookController {
         return "redirect:/guestbook/list";
     }
 
-    //조회
-    @GetMapping("/read")
+    //조회 , 수정
+    @GetMapping({"/read","/modify"})
     public void read(long gno, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
 
         log.info("Controller read gno : " + gno);
@@ -68,4 +67,31 @@ public class GuestbookController {
 
         model.addAttribute("dto",dto);
     }
+
+    @PostMapping("/remove")
+    public String remove(long gno, RedirectAttributes redirectAttributes) {
+
+        log.info("gno : " + gno);
+
+        service.remove(gno);
+
+        redirectAttributes.addFlashAttribute("msg",gno);
+
+        return "redirect:/guestbook/list";
+    }
+
+    @PostMapping("/modify")
+    public String modify(GuestbookDTO dto, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, RedirectAttributes redirectAttributes) {
+
+        log.info("post modify.........");
+        log.info(" dto :" + dto);
+
+        service.modify(dto);
+
+        redirectAttributes.addAttribute("page",requestDTO.getPage());
+        redirectAttributes.addAttribute("gno",dto.getGno());
+
+        return "redirect:/guestbook/read";
+    }
+
 }

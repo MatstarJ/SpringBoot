@@ -17,6 +17,10 @@ public interface GuestbookService {
     //조회처리
     GuestbookDTO read(Long gno);
 
+    //수정
+    void remove(Long gno);
+    //삭제
+    void modify(GuestbookDTO dto);
 
 
     // DTO(GuestbookDTO)를 Entity 객체(Guestbook)로 변경한다.
@@ -41,10 +45,12 @@ public interface GuestbookService {
                 .content(entity.getContent())
                 .writer(entity.getWriter())
                 .regDate(entity.getRegDate())
-                .modDate(entity.getRegDate())
+                .modDate(entity.getModDate())
                 .build();
 
         return dto;
     }
+    
+    
 
 }

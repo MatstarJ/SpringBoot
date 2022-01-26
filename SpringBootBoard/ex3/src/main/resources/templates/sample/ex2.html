@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+
+<body>
+1
+  <ul>
+      <li th:each="dto : ${list}">
+          [[${dto}]]
+      </li>
+  </ul>
+
+<br><br><br>
+
+2
+<!--  state 상태 객체 0부터 시작, count 상태 객체 1부터 시작  -->
+<ul>
+    <li th:each ="dto, state : ${list}">
+        [[${state.index}]] --- [[${dto}]]
+    </li>
+</ul>
+
+
+<br><br><br>
+
+3
+<ul>
+    <li th:each = "dto, count: ${list}" th:if ="${dto.sno %5 ==0}">
+        [[${dto}]]
+    </li>
+</ul>
+
+
+<br><br><br>
+4
+<ul>
+    <li th:each = "dto, state : ${list}">
+        <span th:if = "${dto.sno % 5 ==0}" th:text="${'---------------------------------'+ dto.sno}"></span>
+        <span th:unless = "${dto.sno % 5 ==0}" th:text="${'--------------------------------'+ dto.first}"></span>
+    </li>
+
+</ul>
+
+<br><br><br>
+
+5
+<ul>
+    <li th:each="dto,state:${list}" th:text="${dto.sno %5 ==0} ? ${dto.sno}">
+
+    </li>
+</ul>
+
+
+
+<br><br><br>
+6
+<ul>
+    <li th:each="dto,state:${list}" th:text="${dto.sno %5 ==0} ? ${dto.sno} : ${dto.first}">
+
+    </li>
+</ul>
+
+
+<br><br><br>
+
+<style>
+    .target {
+        background-color: red;
+    }
+</style>
+
+7
+<ul>
+    <li th:each="dto, state: ${list}" th:class="${dto.sno%5 == 0} ? 'target'" th:text="${dto}"></li>
+</ul>
+
+
+<br><br><br>
+
+8
+<ul>
+    <th:block th:each="dto: ${list}">
+        <li th:text="${dto.sno %5 == 0}? ${dto.sno} : ${dto.first}"></li>
+    </th:block>
+</ul>
+</body>
+</html>

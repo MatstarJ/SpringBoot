@@ -29,13 +29,13 @@ public class GuestbookServiceImpl implements GuestbookService {
     @Override
     public Long register(GuestbookDTO dto) {
 
-        log.info("Service Register(dtoToEntity) 메소드 실행");
+        log.info("Service Register 메소드 실행");
         log.info(dto);
 
         //생성한 dto 객체를 entity 클래스에 주입
         Guestbook entity = dtoToEntity(dto);
 
-        log.info("DTO to Entity " + dto);
+        log.info("DTO to Entity 메소드 실행 : " + dto);
 
         repository.save(entity);
 
@@ -45,18 +45,22 @@ public class GuestbookServiceImpl implements GuestbookService {
     @Override
     public PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO requestDTO) {
         //getPageable = Pagerequest.of(page-1, size, sort) 메서드 실행
+        //Pageable 객체 생성
         Pageable pageable = requestDTO.getPageable(Sort.by("gno").descending());
 
         //검색조건 처리
         BooleanBuilder booleanBuilder=getSearch(requestDTO);
 
+        //Page객체 생성
         Page<Guestbook> result = repository.findAll(booleanBuilder,pageable);
 
         //검색조건 처리 이전 코드
         //Page<Guestbook> result = repository.findAll(pageable);
 
+        //엔티티 객체를 DTO 객체로 변환하는 Function 생성
         Function<Guestbook,GuestbookDTO> fn = (entity -> entityToDto(entity));
 
+        //PageResultDTO 객체를 생성해서 DTO리스트 및 페이지 처리와 필요한 값들을 생성한다.
         return new PageResultDTO<>(result,fn);
 
     }

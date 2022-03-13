@@ -20,8 +20,8 @@ public class Reply extends BaseEntity {
 
     private String replyer;
 
-    @ManyToOne
-    private Board board; // Board의 PK를 FK로 지정
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Board board; // Board의 PK를(bno) Reply의 FK로 지정
 }
 
 

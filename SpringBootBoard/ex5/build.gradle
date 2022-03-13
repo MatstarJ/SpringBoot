@@ -1,8 +1,16 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'war'
+    //querydsl 추가
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.matstar'
@@ -30,8 +38,66 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time'
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client'
+
+    //querydsl 의존성 추가
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+def deleteDir = "$buildDir/generated/"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl.doFirst {
+    if ( file(deleteDir) ) {
+        delete file(deleteDir)
+        System.out.println("Delete.... queryDir File")
+    }else{
+        System.out.println("DO NOT Delete.... queryDir File")
+    }
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+clean {
+    delete file(querydslDir)
+}
+
+
+
+
+

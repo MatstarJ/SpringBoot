@@ -30,7 +30,7 @@ public interface GuestbookService {
         return entity;
     }
 
-
+    //엔티티 객체를 dto로 변환
     default GuestbookDTO entityToDto(Guestbook entity) {
 
         GuestbookDTO dto = GuestbookDTO.builder()

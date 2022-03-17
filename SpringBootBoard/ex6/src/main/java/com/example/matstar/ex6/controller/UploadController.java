@@ -57,19 +57,20 @@ public class UploadController {
 
         for(MultipartFile uploadFile : uploadFiles) {
 
+            log.info("(controller.uploadAjax)파일의 컨텐츠 타입 확인 : "+ uploadFile.getContentType());
+
             if(uploadFile.getContentType().startsWith("image") == false) {
-                log.info("컨텐츠 타입 확인 : "+ uploadFile.getContentType());
                 log.warn("this file is not image type");
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
-            //실제 파일 이름, IE나 Edgd는 전체 경로가 들어감
+            //실제 파일 이름, IE나 Edge는 전체 경로가 들어감
             String originalName = uploadFile.getOriginalFilename();
 
             String fileName = originalName.substring(originalName.lastIndexOf("\\") + 1);
 
-            log.info("원본 파일 이름 확인 : " + originalName);
-            log.info("업로드 파일 이름 화인 + " + fileName);
+            log.info("(controller.uploadAjax) 원본 파일 이름 확인 : " + originalName);
+            log.info("(controller.uploadAjax) 업로드 파일 이름 화인 + " + fileName);
 
             //날짜 폴더 생성
             String folderPath = makeFolder();
@@ -81,22 +82,25 @@ public class UploadController {
             String saveName = uploadPath + File.separator + folderPath
                     + File.separator + uuid + "_" + fileName;
 
-            log.info("저장되는 파일 이름 : " + saveName);
+            log.info("(controller.uploadAjax)저장되는 파일 이름과 경로 확인 : " + saveName);
+
 
             Path savePath = Paths.get(saveName);
             try {
                 //원본 파일 저장
                 uploadFile.transferTo(savePath);
 
-                //섬네일 생성
+                //섬네일을 위한 파일 이름
                 String thumbnailSaveName = uploadPath + File.separator +
                         folderPath + File.separator + "s_"+uuid+"_"+fileName;
 
-                //섬네일 파일 이름은 중간에 s_로 시작하도록
+
                 File thumbnailFile = new File(thumbnailSaveName);
 
                 //섬네일 생성
+                // 원본 파일 객체, 섬네일로 만들 파일 객체,너비,높이
                 Thumbnailator.createThumbnail(savePath.toFile(),thumbnailFile,100,100);
+
 
                 resultDTOList.add(new UploadResultDTO(fileName,uuid,folderPath));
 
@@ -110,24 +114,28 @@ public class UploadController {
 
 
     @GetMapping("/display")
-    public ResponseEntity<byte[]> getFile(String fileName) {
+    public ResponseEntity<byte[]> getFile(String fileName, String size) {
 
         ResponseEntity<byte[]> result = null;
 
         try {
             String srcFileName = URLDecoder.decode(fileName,"UTF-8");
-            log.info("업로드된 파일 이름 확인 ; " + srcFileName);
+            log.info("(controller.display) 디코딩된 업로드된 파일 이름 확인 ; " + srcFileName);
 
             File file = new File(uploadPath+File.separator+srcFileName);
 
-            log.info("전체 파일 이름 확인 : " + file);
+            if(size != null && size.equals("1")){
+                file = new File(file.getParent(),file.getName().substring(2));
+            }
+            log.info("file :  " + file);
+
+            log.info("(controller.display) 경로를 포함한 전체 파일 이름 확인 : " + file);
 
             HttpHeaders header = new HttpHeaders();
 
             //MIME 타입 처리
             header.add("Content-Type", Files.probeContentType(file.toPath()));
-            log.info("file toPath() 확인 : " + file.toPath());
-            log.info("Contents Type 확인 : " + Files.probeContentType(file.toPath()));
+            log.info("(controller.display) Contents Type 확인 : " + Files.probeContentType(file.toPath()));
 
 
             // 파일 데이터 처리

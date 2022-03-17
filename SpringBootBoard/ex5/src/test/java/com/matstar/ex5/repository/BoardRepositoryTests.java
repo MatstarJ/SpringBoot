@@ -84,9 +84,7 @@ public class BoardRepositoryTests {
         Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
 
         result.get().forEach(row -> {
-            Object[] arr = (Object[])row;
-
-            System.out.println(Arrays.toString(arr));
+            System.out.println(Arrays.toString(row));
         });
 
     }
